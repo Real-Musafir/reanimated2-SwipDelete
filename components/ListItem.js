@@ -1,13 +1,33 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { PanGestureHandler } from "react-native-gesture-handler";
-import Animated from "react-native-reanimated";
+import Animated, {
+  useAnimatedGestureHandler,
+  useAnimatedStyle,
+  useSharedValue,
+} from "react-native-reanimated";
 
 function ListItem({ task }) {
+  const translateX = useSharedValue(0);
+
+  const panGesture = useAnimatedGestureHandler({
+    onActive: (event) => {
+      translateX.value = event.translationX;
+    },
+    onEnd: () => {},
+  });
+
+  const rStyle = useAnimatedStyle(() => ({
+    transform: [
+      {
+        translateX: translateX.value,
+      },
+    ],
+  }));
   return (
     <View style={styles.taskContainer}>
-      <PanGestureHandler>
-        <Animated.View style={styles.task}>
+      <PanGestureHandler onGestureEvent={panGesture}>
+        <Animated.View style={[styles.task, rStyle]}>
           <Text style={styles.taskTitle}>{task.title}</Text>
         </Animated.View>
       </PanGestureHandler>
