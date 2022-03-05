@@ -8,8 +8,13 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { Dimensions } from "react-native";
 
 const LIST_ITEM_HEIGHT = 70;
+
+const { width: SCREEN_WIDTH } = Dimensions.get("window");
+
+const TRANSLATE_X_TRESHHOLD = -SCREEN_WIDTH * 0.3;
 
 function ListItem({ task }) {
   const translateX = useSharedValue(0);
@@ -17,9 +22,15 @@ function ListItem({ task }) {
   const panGesture = useAnimatedGestureHandler({
     onActive: (event) => {
       translateX.value = event.translationX;
+      console.log(translateX.value);
     },
     onEnd: () => {
-      translateX.value = withTiming(0);
+      const shouldBeDismissed = translateX.value < TRANSLATE_X_TRESHHOLD;
+      if (shouldBeDismissed) {
+        translateX.value = withTiming(-SCREEN_WIDTH);
+      } else {
+        translateX.value = withTiming(0);
+      }
     },
   });
 
