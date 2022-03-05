@@ -41,15 +41,23 @@ function ListItem({ task }) {
       },
     ],
   }));
+
+  const rIconContainerStyle = useAnimatedStyle(() => {
+    const opacity = withTiming(
+      translateX.value < TRANSLATE_X_TRESHHOLD ? 1 : 0
+    );
+    return { opacity };
+  });
+
   return (
     <View style={styles.taskContainer}>
-      <View style={styles.iconContainer}>
+      <Animated.View style={[styles.iconContainer, rIconContainerStyle]}>
         <FontAwesome5
           name={"trash-alt"}
           size={LIST_ITEM_HEIGHT * 0.4}
           color={"red"}
         />
-      </View>
+      </Animated.View>
       <PanGestureHandler onGestureEvent={panGesture}>
         <Animated.View style={[styles.task, rStyle]}>
           <Text style={styles.taskTitle}>{task.title}</Text>
