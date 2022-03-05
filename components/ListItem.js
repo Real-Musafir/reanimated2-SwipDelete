@@ -32,11 +32,6 @@ function ListItem({ task }) {
   }));
   return (
     <View style={styles.taskContainer}>
-      <PanGestureHandler onGestureEvent={panGesture}>
-        <Animated.View style={[styles.task, rStyle]}>
-          <Text style={styles.taskTitle}>{task.title}</Text>
-        </Animated.View>
-      </PanGestureHandler>
       <View style={styles.iconContainer}>
         <FontAwesome5
           name={"trash-alt"}
@@ -44,6 +39,11 @@ function ListItem({ task }) {
           color={"red"}
         />
       </View>
+      <PanGestureHandler onGestureEvent={panGesture}>
+        <Animated.View style={[styles.task, rStyle]}>
+          <Text style={styles.taskTitle}>{task.title}</Text>
+        </Animated.View>
+      </PanGestureHandler>
     </View>
   );
 }
