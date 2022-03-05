@@ -5,7 +5,11 @@ import Animated, {
   useAnimatedGestureHandler,
   useAnimatedStyle,
   useSharedValue,
+  withTiming,
 } from "react-native-reanimated";
+import { FontAwesome5 } from "@expo/vector-icons";
+
+const LIST_ITEM_HEIGHT = 70;
 
 function ListItem({ task }) {
   const translateX = useSharedValue(0);
@@ -14,7 +18,9 @@ function ListItem({ task }) {
     onActive: (event) => {
       translateX.value = event.translationX;
     },
-    onEnd: () => {},
+    onEnd: () => {
+      translateX.value = withTiming(0);
+    },
   });
 
   const rStyle = useAnimatedStyle(() => ({
@@ -31,6 +37,13 @@ function ListItem({ task }) {
           <Text style={styles.taskTitle}>{task.title}</Text>
         </Animated.View>
       </PanGestureHandler>
+      <View style={styles.iconContainer}>
+        <FontAwesome5
+          name={"trash-alt"}
+          size={LIST_ITEM_HEIGHT * 0.4}
+          color={"red"}
+        />
+      </View>
     </View>
   );
 }
@@ -38,9 +51,9 @@ function ListItem({ task }) {
 const styles = StyleSheet.create({
   task: {
     width: "90%",
-    height: 70,
+    height: LIST_ITEM_HEIGHT,
     backgroundColor: "white",
-    marginVertical: 10,
+
     justifyContent: "center",
     paddingLeft: 20,
     borderRadius: 10,
@@ -56,9 +69,18 @@ const styles = StyleSheet.create({
   taskContainer: {
     width: "100%",
     alignItems: "center",
+    marginVertical: 10,
   },
   taskTitle: {
     fontSize: 16,
+  },
+  iconContainer: {
+    height: LIST_ITEM_HEIGHT,
+    width: LIST_ITEM_HEIGHT,
+    position: "absolute",
+    right: "10%",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 
