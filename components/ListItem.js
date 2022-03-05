@@ -2,6 +2,7 @@ import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { PanGestureHandler } from "react-native-gesture-handler";
 import Animated, {
+  runOnJS,
   useAnimatedGestureHandler,
   useAnimatedStyle,
   useSharedValue,
@@ -16,7 +17,7 @@ const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 const TRANSLATE_X_TRESHHOLD = -SCREEN_WIDTH * 0.3;
 
-function ListItem({ task }) {
+function ListItem({ task, onDismiss }) {
   const translateX = useSharedValue(0);
   const itemHeight = useSharedValue(LIST_ITEM_HEIGHT);
   const marginVertical = useSharedValue(10);
@@ -32,7 +33,11 @@ function ListItem({ task }) {
         translateX.value = withTiming(-SCREEN_WIDTH);
         itemHeight.value = withTiming(0);
         marginVertical.value = withTiming(0);
-        opacity.value = withTiming(0);
+        opacity.value = withTiming(0, undefined, (isFinished) => {
+          if (isFinished && onDismiss) {
+            runOnJS(onDismiss)(task);
+          }
+        });
       } else {
         translateX.value = withTiming(0);
       }

@@ -4,6 +4,7 @@ import { SafeAreaView, ScrollView } from "react-native";
 import { useState } from "react";
 import ListItem from "./components/ListItem";
 import "react-native-gesture-handler";
+import { useCallback } from "react";
 
 const TITLES = [
   "Record the dismissible tutorial",
@@ -20,12 +21,16 @@ const BACKGROUND_COLOR = "#FAFBFF";
 export default function App() {
   const [tasks, setTasks] = useState(TASKS);
 
+  const onDismiss = useCallback((task) => {
+    setTasks((tasks) => tasks.filter((item) => item.index !== task.index));
+  });
+
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Tasks</Text>
       <ScrollView style={{ flex: 1 }}>
         {tasks.map((task) => (
-          <ListItem key={task.index} task={task} />
+          <ListItem key={task.index} task={task} onDismiss={onDismiss} />
         ))}
       </ScrollView>
     </SafeAreaView>
